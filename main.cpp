@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <cmath>
 
 const int WIDTH = 1000, HEIGHT = 1000;
 int targetFPS = 120;
@@ -18,6 +19,7 @@ int main(){
     float yOffset = 0.0f;
 
     float zoomUni = 1.0f;
+    float dragStep = 0.01f;
 
     SetShaderValue(baseShader, resolutionLoc, &resolution, SHADER_UNIFORM_VEC2);
 
@@ -25,6 +27,8 @@ int main(){
     Rectangle texturedRec = {0, 0, WIDTH, HEIGHT};
 
     while (!WindowShouldClose()) {
+
+        dragStep = zoomUni * 0.01f;;
 
         float time = GetTime();
         Vector2 offsetUniform = {xOffset, yOffset};
@@ -46,18 +50,21 @@ int main(){
 
         // Controlling Zoom Factor
         if(IsKeyDown(KEY_UP))
-            zoomUni -= 0.01f;
+            zoomUni -= 0.005f;
         if(IsKeyDown(KEY_DOWN))
-            zoomUni += 0.01f;
+            zoomUni += 0.005f;
+        if(zoomUni < 0.0f)
+            zoomUni = 0.0f;
+
         // Moving Around
         if(IsKeyDown(KEY_W))
-            yOffset += 0.01f;
+            yOffset += dragStep;
         if(IsKeyDown(KEY_S))
-            yOffset -= 0.01f;
+            yOffset -= dragStep;
         if(IsKeyDown(KEY_A))
-            xOffset -= 0.01f;
+            xOffset -= dragStep;
         if(IsKeyDown(KEY_D))
-            xOffset += 0.01f;
+            xOffset += dragStep;
     }
     CloseWindow();
 }
